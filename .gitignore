@@ -1,0 +1,15 @@
+# 依赖与构建产物
+node_modules/
+dist/
+*.tgz
+
+# 运行期产物
+.dsh-content-hash
+*.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+*.lnk

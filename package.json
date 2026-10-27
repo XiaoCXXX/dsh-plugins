@@ -1,0 +1,13 @@
+{
+  "name": "dsh-plugins",
+  "private": true,
+  "version": "0.1.0",
+  "description": "DeepSeek Harness plugins: control bar, theme pack, desktop pet, quick ask",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "node tools/check.mjs"
+  },
+  "license": "MIT"
+}
