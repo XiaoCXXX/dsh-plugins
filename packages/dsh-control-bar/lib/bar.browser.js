@@ -63,14 +63,24 @@
 
   var state = load()
 
+  // 默认位置：对话区左下角。不选左下角 16px 是因为那里正好压住侧栏「设置」，
+  // 也不选右下角（桌面宠物在那儿）、底部中间（输入框在那儿）。
+  function defaultLeft() {
+    var sidebar = 300
+    return Math.min(sidebar, Math.max(16, window.innerWidth - 220))
+  }
+  function defaultTop() {
+    return Math.max(16, window.innerHeight - 76)
+  }
+
   var host = document.createElement('div')
   host.id = 'dsh-control-bar'
   host.setAttribute('data-plugin', 'dsh-control-bar')
   host.style.cssText = [
     'position:fixed',
     'z-index:2147483000',
-    'left:' + (typeof state.x === 'number' ? state.x : 16) + 'px',
-    'top:' + (typeof state.y === 'number' ? state.y : Math.max(16, window.innerHeight - 76)) + 'px',
+    'left:' + (typeof state.x === 'number' ? state.x : defaultLeft()) + 'px',
+    'top:' + (typeof state.y === 'number' ? state.y : defaultTop()) + 'px',
     'width:0',
     'height:0',
     'pointer-events:none',
@@ -83,7 +93,10 @@
     ':host{all:initial}',
     '.bar{',
     '  pointer-events:auto;',
-    '  display:flex;align-items:center;gap:2px;',
+    '  /* 宿主是 0 尺寸的定位锚点；块级 flex 会被它压成 0 宽，',
+    '     所以必须 inline-flex + max-content，让胶囊按内容撑开。 */',
+    '  display:inline-flex;width:max-content;',
+    '  align-items:center;gap:2px;',
     '  padding:4px;border-radius:999px;',
     '  background:rgba(22,24,31,.82);',
     '  color:#e8eaf2;',
@@ -101,6 +114,7 @@
     '.dot.on{background:#3ddc84;box-shadow:0 0 8px rgba(61,220,132,.55)}',
     '.dot.off{background:#ff6b6b;box-shadow:0 0 8px rgba(255,107,107,.5)}',
     '.btn{',
+    '  flex:none;',
     '  width:30px;height:30px;border:0;border-radius:50%;',
     '  background:transparent;color:inherit;font-size:15px;line-height:1;',
     '  display:flex;align-items:center;justify-content:center;cursor:pointer;',
@@ -339,7 +353,7 @@
     requestAnimationFrame(function () {
       var rect = bar.getBoundingClientRect()
       if (typeof state.x !== 'number' || typeof state.y !== 'number') {
-        moveTo(16, Math.max(16, window.innerHeight - rect.height - 24))
+        moveTo(defaultLeft(), defaultTop() - rect.height)
       } else {
         moveTo(state.x, state.y)
       }
